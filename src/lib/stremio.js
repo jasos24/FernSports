@@ -509,18 +509,34 @@ export async function getEventById(origin,id){
   const event=items.find(x=>x._eventId===parsed.eventId);
   return event?{...event,poster:posterFor(origin,parsed.league,parsed.date,parsed.eventId),background:posterFor(origin,parsed.league,parsed.date,parsed.eventId)}:null;
 }
+function streamLabel(stream){
+  return `${stream.name||""} ${stream.title||""}`.toLowerCase();
+}
+function isPpvStream(stream){
+  return /amazon|prime video|netflix|dazn|espn\\+|ppv|pay per view|apple tv|paramount\\+|peacock|fubo|discovery\\+|hbo max/i.test(streamLabel(stream));
+}
+function isTvChannel(stream){
+  const label=streamLabel(stream);
+  return /espn(?!\\+)|fox sports|\\bfox\\b|\\bnbc\\b|\\bcbs\\b|\\babc\\b|\\btnt\\b|\\btbs\\b|usa network|sky sports|bein|sportsnet|tsn|eleven|viaplay|v sport|rogers|channel|broadcast|live tv/i.test(label);
+}
+function isEnglishTvChannel(stream){
+  if(!isTvChannel(stream))return false;
+  const label=streamLabel(stream);
+  const explicitEnglish=/(?:^|[\\s|,:/()[\\]-])(?:english|eng|en)(?:$|[\\s|,:/()[\\]-])/i.test(label);
+  const englishRegion=/(?:^|[\\s|,:/()[\\]-])(?:us|usa|uk|gb|au|aus|nz|ca|can)(?:$|[\\s|,:/()[\\]-])/i.test(label);
+  return explicitEnglish||englishRegion;
+}
 function priority(stream){
-  const label=`${stream.name||""} ${stream.title||""}`.toLowerCase();
-  const us=/\bunited states\b|(?:^|\s)(?:us|usa)\s*(?:[:|•-]|en\b)/i.test(label);
-  const ppv=/amazon|prime video|netflix|dazn|espn\+|ppv|pay per view|apple tv|paramount\+|peacock/.test(label);
-  const tv=/espn|fox|nbc|cbs|abc|tnt|tbs|usa network|sky sports|bein|sportsnet|tsn|eleven|viaplay|v sport|rogers|channel|broadcast|live tv/.test(label)&&!ppv;
-  return (us?0:tv?100:ppv?200:300);
+  if(isPpvStream(stream))return 300;
+  if(isEnglishTvChannel(stream))return 0;
+  if(isTvChannel(stream))return 100;
+  return 200;
 }
 function decorateStream(stream,meta){
   const rank=priority(stream),provider=(stream.name||"SPORTS STREAM").replace(/[▶️]/g,"").trim();
-  const ppv=/amazon|prime video|netflix|dazn|espn\+|ppv|pay per view|apple tv|paramount\+|peacock/i.test(`${provider} ${stream.title||""}`);
-  const tag=rank===0?"🇺🇸 US":ppv?"PPV / STREAMING NETWORK":rank===100?"BROADCAST TV":"LIVE STREAM";
-  return {...stream,name:`${tag} · ${provider}`,title:`${meta.name}\n${tag}${stream.title?` · ${stream.title}`:""}`,_rank:rank};
+  const ppv=isPpvStream(stream);
+  const tag=rank===0?"ENGLISH TV":ppv?"PPV / STREAMING NETWORK":rank===100?"BROADCAST TV":"LIVE STREAM";
+  return {...stream,name:`${tag} · ${provider}`,title:`${meta.name}\\n${tag}${stream.title?` · ${stream.title}`:""}`,_rank:rank};
 }
 function channelKey(stream){
   const raw=String(stream.title||stream.name||"").split(/\n/).pop().toLowerCase()
