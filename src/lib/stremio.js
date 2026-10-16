@@ -510,20 +510,20 @@ export async function getEventById(origin,id){
   return event?{...event,poster:posterFor(origin,parsed.league,parsed.date,parsed.eventId),background:posterFor(origin,parsed.league,parsed.date,parsed.eventId)}:null;
 }
 function streamLabel(stream){
-  return `${stream.name||""} ${stream.title||""}`.toLowerCase();
+  return String(stream.name||"")+" "+String(stream.title||"");
 }
 function isPpvStream(stream){
-  return /amazon|prime video|netflix|dazn|espn\\+|ppv|pay per view|apple tv|paramount\\+|peacock|fubo|discovery\\+|hbo max/i.test(streamLabel(stream));
+  return /amazon|prime video|netflix|dazn|espn\+|ppv|pay per view|apple tv|paramount\+|peacock|fubo|discovery\+|hbo max/i.test(streamLabel(stream));
 }
 function isTvChannel(stream){
   const label=streamLabel(stream);
-  return /espn(?!\\+)|fox sports|\\bfox\\b|\\bnbc\\b|\\bcbs\\b|\\babc\\b|\\btnt\\b|\\btbs\\b|usa network|sky sports|bein|sportsnet|tsn|eleven|viaplay|v sport|rogers|channel|broadcast|live tv/i.test(label);
+  return /espn(?!\+)|fox sports|\bfox\b|\bnbc\b|\bcbs\b|\babc\b|\btnt\b|\btbs\b|usa network|sky sports|bein|sportsnet|tsn|eleven|viaplay|v sport|rogers|channel|broadcast|live tv/i.test(label);
 }
 function isEnglishTvChannel(stream){
   if(!isTvChannel(stream))return false;
   const label=streamLabel(stream);
-  const explicitEnglish=/(?:^|[\\s|,:/()[\\]-])(?:english|eng|en)(?:$|[\\s|,:/()[\\]-])/i.test(label);
-  const englishRegion=/(?:^|[\\s|,:/()[\\]-])(?:us|usa|uk|gb|au|aus|nz|ca|can)(?:$|[\\s|,:/()[\\]-])/i.test(label);
+  const explicitEnglish=/(?:^|[\s|,:/()[\]-])(?:english|eng|en)(?:$|[\s|,:/()[\]-])/i.test(label);
+  const englishRegion=/(?:^|[\s|,:/()[\]-])(?:us|usa|uk|gb|au|aus|nz|ca|can)(?:$|[\s|,:/()[\]-])/i.test(label);
   return explicitEnglish||englishRegion;
 }
 function priority(stream){
@@ -536,7 +536,7 @@ function decorateStream(stream,meta){
   const rank=priority(stream),provider=(stream.name||"SPORTS STREAM").replace(/[▶️]/g,"").trim();
   const ppv=isPpvStream(stream);
   const tag=rank===0?"ENGLISH TV":ppv?"PPV / STREAMING NETWORK":rank===100?"BROADCAST TV":"LIVE STREAM";
-  return {...stream,name:`${tag} · ${provider}`,title:`${meta.name}\\n${tag}${stream.title?` · ${stream.title}`:""}`,_rank:rank};
+  return {...stream,name:tag+" · "+provider,title:String(meta.name)+"\n"+tag+(stream.title?" · "+stream.title:""),_rank:rank};
 }
 function channelKey(stream){
   const raw=String(stream.title||stream.name||"").split(/\n/).pop().toLowerCase()
