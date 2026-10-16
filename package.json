@@ -1,0 +1,16 @@
+{
+  "name": "espn-tennis-live-poster",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "next build",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "@resvg/resvg-js": "^2.6.2",
+    "next": "15.5.12",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
+    "sharp": "^0.34.3"
+  }
+}
