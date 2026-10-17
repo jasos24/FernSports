@@ -72,7 +72,7 @@ test('EPG catalogs include college football, darts, CFL and wrestling only withi
   const now = Date.parse('2026-10-17T00:00:00Z');
   const channels = [
     { id: 'college', source: 'dream', label: 'Alabama Crimson Tide vs Tennessee Volunteers', programmes: [{ start: now, stop: now + 4 * 60 * 60_000, title: 'Football' }] },
-    { id: 'cfl', source: 'dream', label: 'Canadian Football League | Montreal Alouettes vs Saskatchewan Roughriders', programmes: [{ start: now, stop: now + 4 * 60 * 60_000, title: 'Live event' }] },
+    { id: 'cfl', source: 'dream', label: 'Montreal Alouettes vs Saskatchewan Roughriders', programmes: [{ start: now, stop: now + 4 * 60 * 60_000, title: 'Live event' }] },
     { id: 'darts', source: 'dream', label: 'Dutch Darts Championship Day 2 Afternoon Session', programmes: [{ start: now, stop: now + 4 * 60 * 60_000, title: 'Dutch Darts Championship' }] },
     { id: 'wrestling', source: 'dream', label: 'AEW Saturday Night Collision', programmes: [{ start: now, stop: now + 3 * 60 * 60_000, title: 'AEW Wrestling' }] },
     { id: 'tomorrow', source: 'dream', label: 'Dallas Cowboys vs Philadelphia Eagles', programmes: [{ start: now + 25 * 60 * 60_000, stop: now + 29 * 60 * 60_000, title: 'NFL Football' }] },
