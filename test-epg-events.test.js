@@ -84,3 +84,19 @@ test('EPG catalogs include college football, darts, CFL and wrestling only withi
   assert.deepEqual(new Set(events.map(event => event._league)), new Set(['ncaaf', 'cfl', 'darts', 'wrestling']));
   assert.equal(events.some(event => event._sourceIds.includes('flixlivetvtest:dream:tomorrow')), false);
 });
+
+
+test('college EPG matchups enrich the ESPN fixture instead of duplicating it', () => {
+  const now = Date.parse('2026-10-17T12:00:00Z');
+  const fixture = {
+    _league: 'ncaaf', _eventId: '401858268', name: 'Georgia Tech Yellow Jackets at Virginia Tech Hokies',
+    _start: new Date(now).toISOString(), _competition: { competitors: [
+      { team: { displayName: 'Georgia Tech Yellow Jackets' } }, { team: { displayName: 'Virginia Tech Hokies' } },
+    ] },
+  };
+  const channel = { id: 'gt-vt', source: 'dream', label: 'NCAA Football: Georgia Tech vs Virginia Tech', programmes: [{ start: now, stop: now + 4 * 60 * 60_000, title: 'NCAA Football' }] };
+  const events = buildEpgEvents('https://example.test', { channels: [channel], end: now + 5 * 60 * 60_000 }, [fixture], now);
+  assert.equal(events.length, 1);
+  assert.equal(events[0]._eventId, fixture._eventId);
+  assert.equal(events[0]._league, 'ncaaf');
+});
