@@ -8,7 +8,15 @@ export const SPORTS = {
   ncaaw:{path:"basketball/womens-college-basketball",label:"NCAAW",family:"basketball",group:"Basketball"},
   nfl:{path:"football/nfl",label:"NFL",family:"football",group:"American Football"},
   ncaaf:{path:"football/college-football",label:"NCAAF",family:"football",group:"American Football"},
-  football:{path:"soccer/eng.1",label:"FOOTBALL",family:"soccer",group:"Soccer"},
+  football:{path:"soccer/eng.1",label:"PREMIER LEAGUE",family:"soccer",group:"Soccer"},
+  bundesliga:{path:"soccer/ger.1",label:"BUNDESLIGA",family:"soccer",group:"Soccer"},
+  laliga:{path:"soccer/esp.1",label:"LA LIGA",family:"soccer",group:"Soccer"},
+  seriea:{path:"soccer/ita.1",label:"SERIE A",family:"soccer",group:"Soccer"},
+  ligue1:{path:"soccer/fra.1",label:"LIGUE 1",family:"soccer",group:"Soccer"},
+  eredivisie:{path:"soccer/ned.1",label:"EREDIVISIE",family:"soccer",group:"Soccer"},
+  mls:{path:"soccer/usa.1",label:"MLS",family:"soccer",group:"Soccer"},
+  ligamx:{path:"soccer/mex.1",label:"LIGA MX",family:"soccer",group:"Soccer"},
+  allsvenskan:{path:"soccer/swe.1",label:"ALLSVENSKAN",family:"soccer",group:"Soccer"},
   menscollegesoccer:{path:"soccer/usa.ncaa.m.1",label:"MEN'S COLLEGE SOCCER",family:"soccer",group:"Soccer"},
   womenscollegesoccer:{path:"soccer/usa.ncaa.w.1",label:"WOMEN'S COLLEGE SOCCER",family:"soccer",group:"Soccer"},
   afl:{path:"australian-football/afl",label:"AFL",family:"afl",group:"Australian Football"},
@@ -35,7 +43,7 @@ export const SPORTS = {
 };
 
 export const SPORT_GROUPS = [
-  {name:"Scoreboards",leagues:["nba","wnba","nbl","ncaam","ncaaw","nfl","ncaaf","football","menscollegesoccer","womenscollegesoccer","afl","nrl","rugby","nhl","menscollegehockey","womenscollegehockey","mlb","wbc","collegebaseball","softball","menscollegelacrosse","womenscollegelacrosse","menscollegevolleyball","womenscollegevolleyball","cricket","atp","wta"]},
+  {name:"Scoreboards",leagues:["nba","wnba","nbl","ncaam","ncaaw","nfl","ncaaf","football","bundesliga","laliga","seriea","ligue1","eredivisie","mls","ligamx","allsvenskan","menscollegesoccer","womenscollegesoccer","afl","nrl","rugby","nhl","menscollegehockey","womenscollegehockey","mlb","wbc","collegebaseball","softball","menscollegelacrosse","womenscollegelacrosse","menscollegevolleyball","womenscollegevolleyball","cricket","atp","wta"]},
   {name:"Leaderboards",leagues:["pga","f1","nascar","indycar"]},
   {name:"Combat cards",leagues:["ufc","boxing"]},
 ];
