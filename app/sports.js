@@ -17,6 +17,9 @@ export const SPORTS = {
   mls:{path:"soccer/usa.1",label:"MLS",family:"soccer",group:"Soccer"},
   ligamx:{path:"soccer/mex.1",label:"LIGA MX",family:"soccer",group:"Soccer"},
   allsvenskan:{path:"soccer/swe.1",label:"ALLSVENSKAN",family:"soccer",group:"Soccer"},
+  cfl:{path:null,label:"CFL",family:"football",group:"Canadian Football",epgOnly:true},
+  darts:{path:null,label:"DARTS",family:"darts",group:"Darts",epgOnly:true},
+  wrestling:{path:null,label:"WRESTLING",family:"wrestling",group:"Wrestling",epgOnly:true},
   menscollegesoccer:{path:"soccer/usa.ncaa.m.1",label:"MEN'S COLLEGE SOCCER",family:"soccer",group:"Soccer"},
   womenscollegesoccer:{path:"soccer/usa.ncaa.w.1",label:"WOMEN'S COLLEGE SOCCER",family:"soccer",group:"Soccer"},
   afl:{path:"australian-football/afl",label:"AFL",family:"afl",group:"Australian Football"},
@@ -43,7 +46,7 @@ export const SPORTS = {
 };
 
 export const SPORT_GROUPS = [
-  {name:"Scoreboards",leagues:["nba","wnba","nbl","ncaam","ncaaw","nfl","ncaaf","football","bundesliga","laliga","seriea","ligue1","eredivisie","mls","ligamx","allsvenskan","menscollegesoccer","womenscollegesoccer","afl","nrl","rugby","nhl","menscollegehockey","womenscollegehockey","mlb","wbc","collegebaseball","softball","menscollegelacrosse","womenscollegelacrosse","menscollegevolleyball","womenscollegevolleyball","cricket","atp","wta"]},
+  {name:"Scoreboards",leagues:["nba","wnba","nbl","ncaam","ncaaw","nfl","ncaaf","football","bundesliga","laliga","seriea","ligue1","eredivisie","mls","ligamx","allsvenskan","cfl","darts","wrestling","menscollegesoccer","womenscollegesoccer","afl","nrl","rugby","nhl","menscollegehockey","womenscollegehockey","mlb","wbc","collegebaseball","softball","menscollegelacrosse","womenscollegelacrosse","menscollegevolleyball","womenscollegevolleyball","cricket","atp","wta"]},
   {name:"Leaderboards",leagues:["pga","f1","nascar","indycar"]},
   {name:"Combat cards",leagues:["ufc","boxing"]},
 ];
