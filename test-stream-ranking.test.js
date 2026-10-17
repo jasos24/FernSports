@@ -4,11 +4,11 @@ import { classifyStream } from './lib/stremio.js';
 
 test('stream labels sort into the four requested tiers', () => {
   const cases = [
-    [{ name: 'US: ESPN' }, { rank: 0, tier: 'ENGLISH TV' }],
+    [{ name: 'EN: ESPN' }, { rank: 0, tier: 'ENGLISH TV' }],
     [{ name: 'AU: Fox Sports' }, { rank: 0, tier: 'ENGLISH TV' }],
     [{ name: 'ESPN' }, { rank: 100, tier: 'OTHER TV' }],
-    [{ name: 'US: ESPN+' }, { rank: 300, tier: 'UNKNOWN' }],
-    [{ name: 'UK: Sky Sports' }, { rank: 0, tier: 'ENGLISH TV' }],
+    [{ name: 'PRIME| TSN 5 RAW · LIVE' }, { rank: 0, tier: 'ENGLISH TV' }],
+    [{ name: 'Sky Sports', title: 'Event\\nSky Sports' }, { rank: 100, tier: 'OTHER TV' }],
     [{ name: 'Event PPV' }, { rank: 200, tier: 'EVENT-SPECIFIC PPV' }],
     [{ name: 'Unknown source' }, { rank: 300, tier: 'UNKNOWN' }],
     [{ name: 'Prime Video' }, { rank: 300, tier: 'UNKNOWN' }],
