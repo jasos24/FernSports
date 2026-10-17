@@ -1,6 +1,3 @@
-Warning: truncated output (original token count: 20091)
-Total output lines: 928
-
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -565,7 +562,8 @@ function renderPoster({league, item, leagueLogo, error}) {
 <rect x="50" y="234" width="228" height="276" rx="16" fill="url(#photo)" stroke="#333"/><rect x="322" y="234" width="228" height="276" rx="16" fill="url(#photo)" stroke="#333"/>
 <image href="${esc(playerImage(one))}" x="50" y="234" width="228" height="220" preserveAspectRatio="xMidYMid slice"/><image href="${esc(playerImage(two))}" x="322" y="234" width="228" height="220" preserveAspectRatio="xMidYMid slice"/>
 <rect x="50" y="428" width="228" height="82" fill="#000" fill-opacity=".72"/><rect x="322" y="428" width="228" height="82" fill="#000" fill-opacity=".72"/>${wrappedText(p1,66,464,18,20,"player")}${wrappedText(p2,338,464,18,20,"player")}
-<circle cx="300" cy="372" r…91 tokens truncated…ext x="530" y="604" class="col">${live?"PTS":""}</text>${scoreRows}
+<circle cx="300" cy="372" r="34" fill="#f1c94b" stroke="#111" stroke-width="6"/><text x="300" y="380" class="vs">VS</text>
+<rect x="50" y="538" width="500" height="190" rx="15" fill="#171717" stroke="#343434"/><text x="72" y="574" class="tiny">${live?`LIVE SCORE  •  ${currentSet}`:upcoming?"MATCH SCORECARD":"FINAL SCORE"}</text><text x="72" y="604" class="col">PLAYER</text>${columns}<text x="530" y="604" class="col">${live?"PTS":""}</text>${scoreRows}
 <rect x="50" y="755" width="500" height="1" fill="#333"/><text x="50" y="792" class="tiny">${esc(fmtTime(start))}</text><text x="50" y="824" class="foot">${esc(venue.toUpperCase())}  •  ${esc(round.toUpperCase())}</text><text x="50" y="863" class="foot">${esc(eventName.toUpperCase())}  /  ESPN SCOREBOARD</text>${sourceError}<rect x="504" y="780" width="48" height="48" rx="9" fill="#f2f3f5"/><image href="${esc(leagueLogo)}" x="508" y="784" width="40" height="40" preserveAspectRatio="xMidYMid meet" opacity=".9"/>
 </svg>`;
   return svg;
