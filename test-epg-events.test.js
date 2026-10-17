@@ -8,8 +8,10 @@ test('non-Next event labels are parsed, classified, and grouped as NBL', () => {
     <channel id="nbl-dream"><display-name>EL TV 007| Sydney Kings vs Perth Wildcats (2026-10-17 08:30:00)</display-name></channel>
     <channel id="nbl-strong"><display-name>Event Channel 2 | Sydney Kings vs Perth Wildcats (2026-10-17 08:30:00)</display-name></channel>
     <channel id="ordinary"><display-name>ESPN Live Sports</display-name></channel>
+    <channel id="golf-channel"><display-name>GOLF CHANNEL FHD</display-name></channel>
     <programme start="20261017080000 +0000" stop="20261017120000 +0000" channel="nbl-dream"><title>Sydney Kings vs Perth Wildcats</title><desc>Live event channel</desc></programme>
     <programme start="20261017080000 +0000" stop="20261017120000 +0000" channel="nbl-strong"><title>Sydney Kings vs Perth Wildcats</title><desc>Live event channel</desc></programme>
+    <programme start="20261017080000 +0000" stop="20261017120000 +0000" channel="golf-channel"><title>GOLF CHANNEL FHD</title><desc>Sports channel</desc></programme>
   </tv>`;
   const channels = parseEventChannels(xml).map(channel => ({ ...channel, source: channel.id === 'nbl-dream' ? 'dream' : 'strong' }));
   assert.equal(channels.length, 2, 'ordinary sports channel labels should be ignored');
