@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { parseEventChannels, epgStartTime } from './lib/flix-epg.js';
-import { buildEpgEvents } from './lib/stremio.js';
+import { attachNblEpgSources, buildEpgEvents } from './lib/stremio.js';
 
 test('non-Next event labels are parsed, classified, and grouped as NBL', () => {
   const xml = `<?xml version="1.0"?><tv>
@@ -24,4 +24,27 @@ test('non-Next event labels are parsed, classified, and grouped as NBL', () => {
   assert.equal(events[0]._state, 'upcoming');
   assert.equal(events[0]._sourceIds.length, 2);
   assert.equal(epgStartTime('EL TV 007| Sydney Kings vs Perth Wildcats (2026-10-17 08:30:00)', now), Date.parse('2026-10-17T08:30:00Z'));
+});
+
+test('upcoming ESPN NBL fixtures stay in the catalog without a catalog match and attach only explicit EPG matchups', () => {
+  const now = Date.parse('2026-10-17T11:00:00Z');
+  const fixture = {
+    id: 'espn:nbl:20261018:401875281', type: 'tv', name: 'New Zealand Breakers at Tasmania JackJumpers',
+    _league: 'nbl', _eventId: '401875281', _start: '2026-10-18T04:00:00.000Z', _state: 'upcoming',
+    _competition: { competitors: [
+      { team: { displayName: 'Tasmania JackJumpers', shortDisplayName: 'JackJumpers', name: 'JackJumpers', nickname: 'JackJumpers', abbreviation: 'TAS' } },
+      { team: { displayName: 'New Zealand Breakers', shortDisplayName: 'Breakers', name: 'Breakers', nickname: 'Breakers', abbreviation: 'NZB' } },
+    ] },
+    _sourceIds: [], _sourceNames: [],
+  };
+  const channels = [
+    { id: 'matched', source: 'dream', label: 'EL TV 007 | New Zealand Breakers vs Tasmania JackJumpers (2026-10-18 04:00:00)', programmes: [{ start: now, stop: now + 6 * 60 * 60_000, title: 'Live event' }] },
+    { id: 'generic', source: 'trex', label: 'EL TV 025 | Basketball Live', programmes: [{ start: now, stop: now + 6 * 60 * 60_000, title: 'Sports broadcast' }] },
+    { id: 'wrong-game', source: 'strong', label: 'EL TV 026 | Sydney Kings vs Perth Wildcats (2026-10-18 04:00:00)', programmes: [{ start: now, stop: now + 6 * 60 * 60_000, title: 'Live event' }] },
+  ];
+  const result = attachNblEpgSources([fixture], channels, now);
+  assert.equal(result.length, 1, 'ESPN fixture remains available even when no Flix catalog entry exists');
+  assert.equal(result[0]._sourceIds.length, 1, 'only the explicit correct matchup is attached');
+  assert.match(result[0]._sourceIds[0], /flixlivetvtest:dream:matched/);
+  assert.equal(result[0]._epgMatchCount, 1);
 });
