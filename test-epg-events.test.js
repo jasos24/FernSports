@@ -74,6 +74,7 @@ test('EPG catalogs include college football, darts, CFL and wrestling only withi
     { id: 'college', source: 'dream', label: 'Alabama Crimson Tide vs Tennessee Volunteers', programmes: [{ start: now, stop: now + 4 * 60 * 60_000, title: 'Football' }] },
     { id: 'cfl', source: 'dream', label: 'Montreal Alouettes vs Saskatchewan Roughriders', programmes: [{ start: now, stop: now + 4 * 60 * 60_000, title: 'Live event' }] },
     { id: 'darts', source: 'dream', label: 'Dutch Darts Championship Day 2 Afternoon Session', programmes: [{ start: now, stop: now + 4 * 60 * 60_000, title: 'Dutch Darts Championship' }] },
+    { id: 'one', source: 'dream', label: 'ONE Samurai 4: Jonathan Haggerty vs Akifumi Akimoto', programmes: [{ start: now, stop: now + 3 * 60 * 60_000, title: 'ONE Championship' }] },
     { id: 'wrestling', source: 'dream', label: 'AEW Saturday Night Collision', programmes: [{ start: now, stop: now + 3 * 60 * 60_000, title: 'AEW Wrestling' }] },
     { id: 'volleyball', source: 'dream', label: 'Sviluppo Sud Palmi vs Alva Inox Porto Viro · Serie A2 Credem Banca', programmes: [{ start: now, stop: now + 2 * 60 * 60_000, title: 'Volleyball' }] },
     { id: 'tomorrow', source: 'dream', label: 'Dallas Cowboys vs Philadelphia Eagles', programmes: [{ start: now + 25 * 60 * 60_000, stop: now + 29 * 60 * 60_000, title: 'NFL Football' }] },
@@ -82,7 +83,7 @@ test('EPG catalogs include college football, darts, CFL and wrestling only withi
     { team: { displayName: 'Alabama Crimson Tide' } }, { team: { displayName: 'Tennessee Volunteers' } },
   ] } };
   const events = buildEpgEvents('https://example.test', { channels, end: now + 30 * 60 * 60_000 }, [collegeFixture], now);
-  assert.deepEqual(new Set(events.map(event => event._league)), new Set(['ncaaf', 'cfl', 'darts', 'wrestling']));
+  assert.deepEqual(new Set(events.map(event => event._league)), new Set(['ncaaf', 'cfl', 'darts', 'ufc', 'wrestling']));
   assert.equal(events.some(event => event._sourceIds.includes('flixlivetvtest:dream:tomorrow')), false);
   assert.equal(events.some(event => event._sourceIds.includes('flixlivetvtest:dream:volleyball')), false);
 });
