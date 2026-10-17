@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { parseEventChannels, epgStartTime } from './lib/flix-epg.js';
-import { attachNblEpgSources, buildEpgEvents } from './lib/stremio.js';
+import { attachNblEpgSources, attachPenguNblSources, buildEpgEvents } from './lib/stremio.js';
 
 test('non-Next event labels are parsed, classified, and grouped as NBL', () => {
   const xml = `<?xml version="1.0"?><tv>
@@ -47,4 +47,22 @@ test('upcoming ESPN NBL fixtures stay in the catalog without a catalog match and
   assert.equal(result[0]._sourceIds.length, 1, 'only the explicit correct matchup is attached');
   assert.match(result[0]._sourceIds[0], /flixlivetvtest:dream:matched/);
   assert.equal(result[0]._epgMatchCount, 1);
+});
+
+test('PenguPlay NBL upcoming entries attach only when teams, Sydney date, and kickoff match ESPN', () => {
+  const event = {
+    id: 'espn:nbl:20261018:401875281', name: 'New Zealand Breakers at Tasmania JackJumpers',
+    _league: 'nbl', _start: '2026-10-18T04:00:00.000Z', _sourceIds: [], _sourceNames: [],
+    _competition: { competitors: [
+      { team: { displayName: 'Tasmania JackJumpers', shortDisplayName: 'JackJumpers', name: 'JackJumpers', nickname: 'JackJumpers', abbreviation: 'TAS' } },
+      { team: { displayName: 'New Zealand Breakers', shortDisplayName: 'Breakers', name: 'Breakers', nickname: 'Breakers', abbreviation: 'NZB' } },
+    ] },
+  };
+  const correct = { id: 'pp-live:timstreams~tasmania-jackjumpers-vs-new-zealand-breakers-30546', name: '⏱️ Tasmania JackJumpers vs. New Zealand Breakers', description: 'Basketball\n⏱️ Starts Oct 18, 15:00\nKickoff: Oct 18, 15:00\n🛰️ Sources: TimStreams, Streamed.pk, PPV.st', genres: ['🏀 Basketball'] };
+  const wrongDate = { ...correct, id: 'pp-live:wrong-date', description: 'Basketball\n⏱️ Starts Oct 19, 15:00\nKickoff: Oct 19, 15:00' };
+  const wrongFixture = { ...correct, id: 'pp-live:wrong-fixture', name: 'Sydney Kings vs Perth Wildcats' };
+  const result = attachPenguNblSources([event], [wrongDate, wrongFixture, correct]);
+  assert.equal(result.length, 1);
+  assert.deepEqual(result[0]._sourceIds, [correct.id]);
+  assert.equal(result[0]._penguMatch, true);
 });
