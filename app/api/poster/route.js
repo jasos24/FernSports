@@ -1,3 +1,6 @@
+Warning: truncated output (original token count: 20091)
+Total output lines: 928
+
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -5,12 +8,13 @@ export const maxDuration = 30;
 import sharp from "sharp";
 import {Resvg} from "@resvg/resvg-js";
 import {readFileSync,writeFileSync,existsSync} from "node:fs";
+import {gunzipSync} from "node:zlib";
 import {SPORTS} from "../../sports.js";
 import {parseEpgMatchup} from "../../../lib/espn-assets.js";
 import {parseBoxingSchedule} from "../../../lib/boxing.js";
 import {isTeamLogoUrl,removeEdgeWhiteBackground} from "../../../lib/poster-image.js";
 const POSTER_FONT_PATH="/tmp/espn-poster-DejaVuSans-Bold.ttf";
-if(!existsSync(POSTER_FONT_PATH))writeFileSync(POSTER_FONT_PATH,readFileSync(`${process.cwd()}/app/api/poster/fonts/DejaVuSans-Bold.ttf.gz`));
+if(!existsSync(POSTER_FONT_PATH))writeFileSync(POSTER_FONT_PATH,gunzipSync(readFileSync(`${process.cwd()}/app/api/poster/fonts/DejaVuSans-Bold.ttf.gz`)));
 const ESPN = "https://site.api.espn.com/apis/site/v2/sports";
 const TENNIS_LOGO = "https://a.espncdn.com/combiner/i?img=/redesign/assets/img/icons/ESPN-icon-tennis.png";
 const CRICKET_TEAM_ASSET_IDS={india:6,"westindies":4,australia:2,england:1,"newzealand":5,pakistan:7,"southafrica":3,"srilanka":8,bangladesh:25,afghanistan:40};
@@ -314,7 +318,14 @@ export function renderMatchupPoster({league,sport,item,leagueLogo,error,epgStart
   const logo=highResLogo(leagueLogo||c?.league?.logos?.[0]?.href||event?.logos?.[0]?.href||"");
   const logoSvg=logo?`<image href="${esc(logo)}" x="500" y="28" width="62" height="62" preserveAspectRatio="xMidYMid meet"/>`:`<text x="530" y="65" class="mark" style="fill:#f4cc4e" text-anchor="middle">${esc(sport.label.slice(0,4))}</text>`;
   const accent1=teamAccent(one,"#ef6a44"),accent2=teamAccent(two,"#4f91ff");
-  const card=(name,image,y,labelY,accent,index)=>`<rect x="50" y="${y}" width="500" height="200" rx="28" fill="url(#teamGradient${index})"/>${image?`<image href="${esc(image)}" x="145" y="${y+7}" width="310" height="150" preserveAspectRatio="xMidYMid meet" filter="url(#logoGlow${index})"/>`:league==="boxing"?`<text x="300" y="${y+91}" class="tiny" text-anchor="middle">FIGHTER ${index}</text>`:`<text x="300" y="${y+110}" class="initials" text-anchor="middle" fill="${accent}">${esc(initials(name))}</text>`}${wrappedText(name,300,labelY,23,29,"name","text-anchor=\"middle\"")}`;
+  const glovePalette=["#e53935","#1687ff","#f4b400","#20a464","#a855f7","#ff6b35","#ec4899","#11a6a6"];
+  const gloveFallback=(name,index,y)=>{
+    const seed=`${eventName}|${name}|${index}`;let hash=2166136261;
+    for(let i=0;i<seed.length;i++){hash^=seed.charCodeAt(i);hash=Math.imul(hash,16777619);}
+    const color=glovePalette[(hash>>>0)%glovePalette.length];
+    return `<g transform="translate(300 ${y+8})"><g transform="translate(-58 2) rotate(-18 0 65)"><path d="M-27 77h54v48h-54z" rx="8" fill="#e8e8ec" stroke="#17181d" stroke-width="7"/><path d="M-30 29c0-18 12-30 28-30h18c20 0 35 16 35 36v20c0 10-4 18-12 25l-13 13h-42c-12-10-18-23-18-38z" fill="${color}" stroke="#17181d" stroke-width="8" stroke-linejoin="round"/><path d="M22 47c-2 12-11 20-24 21l-22-2" fill="none" stroke="#fff" stroke-opacity=".45" stroke-width="6" stroke-linecap="round"/><path d="M-27 91h54m-54 12h54" stroke="${color}" stroke-width="5"/></g><g transform="translate(57 2) rotate(18 0 65)"><path d="M-27 77h54v48h-54z" fill="#e8e8ec" stroke="#17181d" stroke-width="7"/><path d="M-30 29c0-18 12-30 28-30h18c20 0 35 16 35 36v20c0 10-4 18-12 25l-13 13h-42c-12-10-18-23-18-38z" fill="${color}" stroke="#17181d" stroke-width="8" stroke-linejoin="round"/><path d="M22 47c-2 12-11 20-24 21l-22-2" fill="none" stroke="#fff" stroke-opacity=".45" stroke-width="6" stroke-linecap="round"/><path d="M-27 91h54m-54 12h54" stroke="${color}" stroke-width="5"/></g></g>`;
+  };
+  const card=(name,image,y,labelY,accent,index)=>`<rect x="50" y="${y}" width="500" height="200" rx="28" fill="url(#teamGradient${index})"/>${image?`<image href="${esc(image)}" x="145" y="${y+7}" width="310" height="150" preserveAspectRatio="xMidYMid meet" filter="url(#logoGlow${index})"/>`:league==="boxing"?gloveFallback(name,index,y):`<text x="300" y="${y+110}" class="initials" text-anchor="middle" fill="${accent}">${esc(initials(name))}</text>`}${wrappedText(name,300,labelY,23,29,"name","text-anchor=\"middle\"")}`;
   const score1=knownValue(one?.score),score2=knownValue(two?.score);
   const scoreVisible=(live||final)&&score1!==""&&score2!==""&&sport.family!=="combat";
   const status=c?.status||{};
@@ -554,8 +565,7 @@ function renderPoster({league, item, leagueLogo, error}) {
 <rect x="50" y="234" width="228" height="276" rx="16" fill="url(#photo)" stroke="#333"/><rect x="322" y="234" width="228" height="276" rx="16" fill="url(#photo)" stroke="#333"/>
 <image href="${esc(playerImage(one))}" x="50" y="234" width="228" height="220" preserveAspectRatio="xMidYMid slice"/><image href="${esc(playerImage(two))}" x="322" y="234" width="228" height="220" preserveAspectRatio="xMidYMid slice"/>
 <rect x="50" y="428" width="228" height="82" fill="#000" fill-opacity=".72"/><rect x="322" y="428" width="228" height="82" fill="#000" fill-opacity=".72"/>${wrappedText(p1,66,464,18,20,"player")}${wrappedText(p2,338,464,18,20,"player")}
-<circle cx="300" cy="372" r="34" fill="#f1c94b" stroke="#111" stroke-width="6"/><text x="300" y="380" class="vs">VS</text>
-<rect x="50" y="538" width="500" height="190" rx="15" fill="#171717" stroke="#343434"/><text x="72" y="574" class="tiny">${live?`LIVE SCORE  •  ${currentSet}`:upcoming?"MATCH SCORECARD":"FINAL SCORE"}</text><text x="72" y="604" class="col">PLAYER</text>${columns}<text x="530" y="604" class="col">${live?"PTS":""}</text>${scoreRows}
+<circle cx="300" cy="372" r…91 tokens truncated…ext x="530" y="604" class="col">${live?"PTS":""}</text>${scoreRows}
 <rect x="50" y="755" width="500" height="1" fill="#333"/><text x="50" y="792" class="tiny">${esc(fmtTime(start))}</text><text x="50" y="824" class="foot">${esc(venue.toUpperCase())}  •  ${esc(round.toUpperCase())}</text><text x="50" y="863" class="foot">${esc(eventName.toUpperCase())}  /  ESPN SCOREBOARD</text>${sourceError}<rect x="504" y="780" width="48" height="48" rx="9" fill="#f2f3f5"/><image href="${esc(leagueLogo)}" x="508" y="784" width="40" height="40" preserveAspectRatio="xMidYMid meet" opacity=".9"/>
 </svg>`;
   return svg;
