@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { classifyStream } from './lib/stremio.js';
+import { classifyStream } from '../lib/stremio.js';
 
 test('stream labels sort into the four requested tiers', () => {
   const cases = [
